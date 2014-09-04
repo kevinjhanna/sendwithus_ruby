@@ -81,7 +81,7 @@ module SendWithUs
         raise SendWithUs::ApiBadRequest, 'campaign_id cannot be nil'
       end
 
-      payload = data.merge( recipient_address: email_address )
+      payload = { recipient_address: email_address, email_data: data }
       payload = payload.to_json
 
       SendWithUs::ApiRequest.new(@configuration).post("drip_campaigns/#{campaign_id}/activate", payload)
@@ -119,18 +119,18 @@ module SendWithUs
     end
 
     def add_customer_event(customer, event_name, revenue=nil)
-      
-      if revenue.nil? 
+
+      if revenue.nil?
         payload = { event_name: event_name }
       else
         payload = { event_name: event_name, revenue: revenue}
-      end      
-      
+      end
+
       payload = payload.to_json
       endpoint = 'customers/' + customer + '/events'
       SendWithUs::ApiRequest.new(@configuration).post(endpoint, payload)
-    end    
+    end
 
-  end  
+  end
 end
 
